@@ -26,17 +26,17 @@ void main() {
     group("invalid test vectors from specification", () {
       test("hrp character out of range (space char)", () {
         expect(() => bech32.decode("\x20" + "1nwldj5"),
-            throwsA(TypeMatcher<OutOfRangeHprCharacters>()));
+            throwsA(TypeMatcher<OutOfRangeHrpCharacters>()));
       });
 
       test("hrp character out of range (delete char)", () {
         expect(() => bech32.decode("\x7F" + "1axkwrx"),
-            throwsA(TypeMatcher<OutOfRangeHprCharacters>()));
+            throwsA(TypeMatcher<OutOfRangeHrpCharacters>()));
       });
 
       test("hrp character out of range (control char)", () {
         expect(() => bech32.decode("\x80" + "1eym55h"),
-            throwsA(TypeMatcher<OutOfRangeHprCharacters>()));
+            throwsA(TypeMatcher<OutOfRangeHrpCharacters>()));
       });
 
       test("too long overall", () {
@@ -53,7 +53,7 @@ void main() {
 
       test("empty hpr", () {
         expect(() => bech32.decode("1pzry9x0s0muk"),
-            throwsA(TypeMatcher<TooShortHpr>()));
+            throwsA(TypeMatcher<TooShortHrp>()));
       });
 
       test("invalid data character", () {
@@ -76,14 +76,14 @@ void main() {
             throwsA(TypeMatcher<InvalidChecksum>()));
       });
 
-      test("empty hpr", () {
+      test("empty hpr, case one", () {
         expect(() => bech32.decode("10a06t8"),
-            throwsA(TypeMatcher<TooShortHpr>()));
+            throwsA(TypeMatcher<TooShortHrp>()));
       });
 
-      test("empty hpr", () {
+      test("empty hpr, case two", () {
         expect(() => bech32.decode("1qzzfhee"),
-            throwsA(TypeMatcher<TooShortHpr>()));
+            throwsA(TypeMatcher<TooShortHrp>()));
       });
     });
 

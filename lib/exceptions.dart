@@ -1,4 +1,4 @@
-class TooShortHpr implements Exception {
+class TooShortHrp implements Exception {
   String toString() => "The human readable part should have non zero length.";
 }
 
@@ -10,8 +10,8 @@ class TooLong implements Exception {
   String toString() => "The bech32 string is too long: $length (>90)";
 }
 
-class OutOfRangeHprCharacters implements Exception {
-  OutOfRangeHprCharacters(this.hpr);
+class OutOfRangeHrpCharacters implements Exception {
+  OutOfRangeHrpCharacters(this.hpr);
 
   final String hpr;
 

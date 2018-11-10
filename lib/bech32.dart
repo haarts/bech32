@@ -27,6 +27,7 @@ class Bech32Encoder extends Converter<Bech32, String> {
 
 class Bech32Decoder extends Converter<String, Bech32> {
   static const int maxInputLength = 90;
+  static const checksumLength = 6;
 
   Bech32 convert(String input) {
     if (input.length > maxInputLength) {
@@ -45,36 +46,48 @@ class Bech32Decoder extends Converter<String, Bech32> {
 
     var separatorPosition = input.lastIndexOf(separator);
 
-    var hrp = input.substring(0, separatorPosition);
-
-    if (_isTooShort(hrp)) {
-      throw TooShortHpr();
-    }
-
-    if (_hasOutOfRangeHrpCharacters(hrp)) {
-      throw OutOfRangeHprCharacters(hrp);
-    }
-
-    List<int> data = input.substring(separatorPosition + 1).split('').map((c) {
-      return charset.indexOf(c);
-    }).toList();
-
-    if (_hasOutOfBoundsChars(data)) {
-      throw OutOfBoundChars(input[separatorPosition + 1 + data.indexOf(-1)]);
-    }
-
-    if (_isInvalidChecksum(hrp, data)) {
+    if (_isChecksumTooShort(separatorPosition, input)) {
       throw InvalidChecksum();
     }
 
-    return Bech32(hrp, data);
+    var hrp = input.substring(0, separatorPosition);
+    var data =
+        input.substring(separatorPosition + 1, input.length - checksumLength);
+    var checksum = input.substring(input.length - checksumLength);
+
+    if (_isHrpTooShort(hrp)) {
+      throw TooShortHrp();
+    }
+
+    if (_hasOutOfRangeHrpCharacters(hrp)) {
+      throw OutOfRangeHrpCharacters(hrp);
+    }
+
+    List<int> dataBytes = data.split('').map((c) {
+      return charset.indexOf(c);
+    }).toList();
+
+    if (_hasOutOfBoundsChars(dataBytes)) {
+      throw OutOfBoundChars(data[dataBytes.indexOf(-1)]);
+    }
+
+    if (_isInvalidChecksum(hrp, dataBytes)) {
+      throw InvalidChecksum();
+    }
+
+    return Bech32(hrp, dataBytes);
+  }
+
+  // From the entire input subtract the hrp length, the separator and the required checksum length
+  bool _isChecksumTooShort(int separatorPosition, String input) {
+    return (input.length - separatorPosition - 1 - checksumLength) < 0;
   }
 
   bool _hasOutOfBoundsChars(List<int> data) {
     return data.any((c) => c == -1);
   }
 
-  bool _isTooShort(String hrp) {
+  bool _isHrpTooShort(String hrp) {
     return hrp.length < 1;
   }
 
@@ -90,7 +103,7 @@ class Bech32Decoder extends Converter<String, Bech32> {
     var pos = bech32.lastIndexOf(separator);
     // -1: not found
     // pos + 7 only found in checksum part
-    if (pos == -1 || pos + 7 > bech32.length) {
+    if (pos == -1) {
       return true;
     }
 
@@ -190,11 +203,11 @@ List<int> _createChecksum(String hrp, List<int> data) {
 }
 
 //String encode(String hrp, List<int> data) {
-//  if (hrp.lenght + data.lenght + 7 > 90) {
-//    throw TooLong(hrp.lenght + data.lenght + 7);
+//  if (hrp.length + data.length + 7 > 90) {
+//    throw TooLong(hrp.length + data.length + 7);
 //  }
 //
-//  if (hrp.lenght < 1) {
+//  if (hrp.length < 1) {
 //    throw TooShortHpr();
 //  }
 //
@@ -246,7 +259,7 @@ List<int> _createChecksum(String hrp, List<int> data) {
 //    throw InvalidHprCharacters(hrp);
 //  }
 //
-//	var data = bech32String[separatorPosition+1:bech32String.lenght-1].map((c) {
+//	var data = bech32String[separatorPosition+1:bech32String.length-1].map((c) {
 //    charset.index(c);
 //	});
 //
