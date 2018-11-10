@@ -17,8 +17,14 @@ void main() {
       ];
 
       valid.forEach((vec) {
-        test("static vector: $vec", () {
+        test("decode static vector: $vec", () {
           expect(bech32.decode(vec), isNotNull);
+        });
+      });
+
+      valid.forEach((vec) {
+        test("decode then encode static vector: $vec", () {
+          expect(bech32.encode(bech32.decode(vec)), vec);
         });
       });
     });

@@ -19,26 +19,58 @@ class Bech32Codec extends Codec<Bech32, String> {
   }
 }
 
-class Bech32Encoder extends Converter<Bech32, String> {
+class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
   String convert(Bech32 input) {
-    return "";
+    var hrp = input.hrp;
+    var data = input.data;
+
+    if (hrp.length + data.length + 1 + Bech32Validations.checksumLength >
+        Bech32Validations.maxInputLength) {
+      throw TooLong(hrp.length + data.length + 7);
+    }
+
+    if (hrp.length < 1) {
+      throw TooShortHrp();
+    }
+
+    if (hasOutOfRangeHrpCharacters(hrp)) {
+      throw OutOfRangeHrpCharacters(hrp);
+    }
+
+    if (isMixedCase(hrp)) {
+      throw MixedCase(hrp);
+    }
+
+    var wasLower = hrp == hrp.toLowerCase();
+    hrp = hrp.toLowerCase();
+
+    var checksummed = data + _createChecksum(hrp, data);
+
+    if (hasOutOfBoundsChars(checksummed)) {
+      throw OutOfBoundChars('a');
+    }
+
+    var result = hrp + separator + checksummed.map((i) => charset[i]).join();
+    if (wasLower) {
+      return result;
+    }
+
+    return result.toUpperCase();
   }
 }
 
-class Bech32Decoder extends Converter<String, Bech32> {
-  static const int maxInputLength = 90;
-  static const checksumLength = 6;
-
+class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
   Bech32 convert(String input) {
-    if (input.length > maxInputLength) {
+    if (input.length > Bech32Validations.maxInputLength) {
       throw TooLong(input.length);
     }
 
-    if (_isMixedCase(input)) {
+    if (isMixedCase(input)) {
       throw MixedCase(input);
     }
 
-    if (_hasInvalidSeparator(input)) {
+    // TODO lob off the checksum part already
+    if (hasInvalidSeparator(input)) {
       throw InvalidSeparator(input.lastIndexOf(separator));
     }
 
@@ -46,20 +78,21 @@ class Bech32Decoder extends Converter<String, Bech32> {
 
     var separatorPosition = input.lastIndexOf(separator);
 
-    if (_isChecksumTooShort(separatorPosition, input)) {
+    if (isChecksumTooShort(separatorPosition, input)) {
       throw InvalidChecksum();
     }
 
     var hrp = input.substring(0, separatorPosition);
-    var data =
-        input.substring(separatorPosition + 1, input.length - checksumLength);
-    var checksum = input.substring(input.length - checksumLength);
+    var data = input.substring(
+        separatorPosition + 1, input.length - Bech32Validations.checksumLength);
+    var checksum =
+        input.substring(input.length - Bech32Validations.checksumLength);
 
-    if (_isHrpTooShort(hrp)) {
+    if (isHrpTooShort(hrp)) {
       throw TooShortHrp();
     }
 
-    if (_hasOutOfRangeHrpCharacters(hrp)) {
+    if (hasOutOfRangeHrpCharacters(hrp)) {
       throw OutOfRangeHrpCharacters(hrp);
     }
 
@@ -67,50 +100,55 @@ class Bech32Decoder extends Converter<String, Bech32> {
       return charset.indexOf(c);
     }).toList();
 
-    if (_hasOutOfBoundsChars(dataBytes)) {
+    if (hasOutOfBoundsChars(dataBytes)) {
       throw OutOfBoundChars(data[dataBytes.indexOf(-1)]);
     }
 
-    if (_isInvalidChecksum(hrp, dataBytes)) {
+    if (isInvalidChecksum(hrp, dataBytes)) {
       throw InvalidChecksum();
     }
 
     return Bech32(hrp, dataBytes);
   }
+}
+
+class Bech32Validations {
+  static const int maxInputLength = 90;
+  static const checksumLength = 6;
 
   // From the entire input subtract the hrp length, the separator and the required checksum length
-  bool _isChecksumTooShort(int separatorPosition, String input) {
+  bool isChecksumTooShort(int separatorPosition, String input) {
     return (input.length - separatorPosition - 1 - checksumLength) < 0;
   }
 
-  bool _hasOutOfBoundsChars(List<int> data) {
+  bool hasOutOfBoundsChars(List<int> data) {
     return data.any((c) => c == -1);
   }
 
-  bool _isHrpTooShort(String hrp) {
+  bool isHrpTooShort(String hrp) {
     return hrp.length < 1;
   }
 
-  bool _isInvalidChecksum(String hrp, List<int> data) {
+  bool isInvalidChecksum(String hrp, List<int> data) {
     return _verifyChecksum(hrp, data);
   }
 
-  bool _isMixedCase(String input) {
+  bool isMixedCase(String input) {
     return input.toLowerCase() != input && input.toUpperCase() != input;
   }
 
-  bool _hasInvalidSeparator(String bech32) {
+  bool hasInvalidSeparator(String bech32) {
     var pos = bech32.lastIndexOf(separator);
     // -1: not found
     // pos + 7 only found in checksum part
-    if (pos == -1) {
+    if (pos == -1 || pos + 7 > bech32.length) {
       return true;
     }
 
     return false;
   }
 
-  bool _hasOutOfRangeHrpCharacters(String hrp) {
+  bool hasOutOfRangeHrpCharacters(String hrp) {
     return hrp.codeUnits.any((c) => c < 33 || c > 126);
   }
 }
