@@ -1,12 +1,10 @@
-name: bitcoin_bip32
+name: bech32
 version: 0.1.0
-description: Library implementing Bitcoins BIP32 (Hierarchical Deterministic key derivation) specification in a Flutter friendly fashion.
+description: Library implementing Bitcoins BIP173 (Bech32 encoding) specification in a Flutter friendly fashion.
 author: Kolibri POS authors <info@kolibripos.com>
-homepage: https://github.com/Kolibri-POS/bitcoin_bip32
+homepage: https://github.com/Kolibri-POS/bech32
 
 dependencies:
-    pointycastle: ^1.0.0-rc4
-    base58check: ^1.0.1
     convert: ^2.0.2
 
 dev_dependencies:
