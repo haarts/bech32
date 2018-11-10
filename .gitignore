@@ -1,0 +1,8 @@
+.dart_tool/
+.packages
+build/
+
+// Except for application packages
+pubspec.lock
+
+doc/api/
