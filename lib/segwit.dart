@@ -54,6 +54,10 @@ class SegwitDecoder extends Converter<String, String> {
       throw InvalidProgramLength("too long");
     }
 
+    if(version == 0 && (program.length != 20 && program.length != 32)) {
+      throw InvalidProgramLength("version $version invalid with length ${program.length}");
+    }
+
     return "";
   }
 }
