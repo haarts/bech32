@@ -1,36 +1,41 @@
 import 'dart:convert';
 
-const SigwitCodec segwit = SegwitCodec();
+import 'package:bech32/bech32.dart';
+import 'package:bech32/exceptions.dart';
 
-class SegwitCodec extends Codec<Sigwit, String> {
+const SegwitCodec segwit = SegwitCodec();
+
+class SegwitCodec extends Codec<String, String> {
   const SegwitCodec();
 
   SegwitDecoder get decoder => SegwitDecoder();
   SegwitEncoder get encoder => SegwitEncoder();
 
-  String encode(Segwit data) {
+  String encode(String data) {
     return SegwitEncoder().convert(data);
   }
 
-  Segwit decode(String data) {
+  String decode(String data) {
     return SegwitDecoder().convert(data);
   }
 }
 
-
-class SegwitEncoder extends Converter<Segwit, String> {
-  String convert(Segwit input) {
+class SegwitEncoder extends Converter<String, String> {
+  String convert(String input) {
     return "";
   }
 }
 
-class SegwitDecoder extends Converter<String, Segwit> {
-  Segwit convert(String input) {
-    return Segwit();
-  }
-}
+class SegwitDecoder extends Converter<String, String> {
+  String convert(String input) {
+    Bech32 decoded = bech32.decode(input);
 
-class Segwit {
+    if(decoded.hrp != 'bc' || decoded.hrp != 'tb') {
+      throw InvalidHrp();
+    }
+
+    return "";
+  }
 }
 
 List<int> segwitDecode(String address) {}

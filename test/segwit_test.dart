@@ -1,6 +1,6 @@
 import "package:test/test.dart";
 
-import "package:bech32/bech32.dart";
+import "package:bech32/segwit.dart";
 import "package:bech32/exceptions.dart";
 
 void main() {
@@ -77,7 +77,7 @@ void main() {
 
       test("invalid program length (for witness version 0)", () {
         expect(() => segwit.decode("BC1QR508D6QEJXTDG4Y5R3ZARVARYV98GJ9P"),
-            throwsA(TypeMatcher<TooLongPrgram>()));
+            throwsA(TypeMatcher<TooLongProgram>()));
       });
 
       test("mixed case", () {

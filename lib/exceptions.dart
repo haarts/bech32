@@ -69,3 +69,13 @@ class TooShortProgram implements Exception {
   // TODO
   String toString() => "";
 }
+
+class InvalidWitnessVersion implements Exception {
+  // TODO
+  String toString() => "";
+}
+
+class InvalidPadding implements Exception {
+  // TODO
+  String toString() => "";
+}
