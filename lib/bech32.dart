@@ -110,7 +110,15 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw OutOfBoundChars(data[dataBytes.indexOf(-1)]);
     }
 
-    if (isInvalidChecksum(hrp, dataBytes)) {
+    List<int> checksumBytes = checksum.split('').map((c) {
+      return charset.indexOf(c);
+    }).toList();
+
+    if (hasOutOfBoundsChars(checksumBytes)) {
+      throw OutOfBoundChars(checksum[checksumBytes.indexOf(-1)]);
+    }
+
+    if (isInvalidChecksum(hrp, dataBytes, checksumBytes)) {
       throw InvalidChecksum();
     }
 
@@ -139,8 +147,8 @@ class Bech32Validations {
     return hrp.length < 1;
   }
 
-  bool isInvalidChecksum(String hrp, List<int> data) {
-    return _verifyChecksum(hrp, data);
+  bool isInvalidChecksum(String hrp, List<int> data, List<int> checksum) {
+    return _verifyChecksum(hrp, data + checksum);
   }
 
   bool isMixedCase(String input) {

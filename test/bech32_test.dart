@@ -4,7 +4,7 @@ import "package:bech32/bech32.dart";
 import "package:bech32/exceptions.dart";
 
 void main() {
-  group("bech32", () {
+  group("bech32 with", () {
     group("valid test vectors from specification", () {
       List<String> valid = [
         "A12UEL5L",
@@ -29,7 +29,7 @@ void main() {
       });
     });
 
-    group("invalid test vectors from specification", () {
+    group("invalid test vectors from specification having", () {
       test("hrp character out of range (space char)", () {
         expect(() => bech32.decode("\x20" + "1nwldj5"),
             throwsA(TypeMatcher<OutOfRangeHrpCharacters>()));
@@ -74,7 +74,7 @@ void main() {
 
       test("invalid checksum character", () {
         expect(() => bech32.decode("de1lg7wt" + "\xFF"),
-            throwsA(TypeMatcher<InvalidChecksum>()));
+            throwsA(TypeMatcher<OutOfBoundChars>()));
       });
 
       test("checksum calculated from upper case hpr", () {
