@@ -65,19 +65,19 @@ void main() {
 
       test("invalid program length (too short)", () {
         expect(() => segwit.decode("bc1rw5uspcuh"),
-            throwsA(TypeMatcher<TooShortProgram>()));
+            throwsA(TypeMatcher<InvalidProgramLength>()));
       });
 
       test("invalid program length (too long)", () {
         expect(
             () => segwit.decode(
                 "bc10w508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7kw5rljs90"),
-            throwsA(TypeMatcher<TooLongProgram>()));
+            throwsA(TypeMatcher<InvalidProgramLength>()));
       });
 
       test("invalid program length (for witness version 0)", () {
         expect(() => segwit.decode("BC1QR508D6QEJXTDG4Y5R3ZARVARYV98GJ9P"),
-            throwsA(TypeMatcher<TooLongProgram>()));
+            throwsA(TypeMatcher<InvalidProgramLength>()));
       });
 
       test("mixed case", () {
@@ -101,7 +101,7 @@ void main() {
 
       test("empty data", () {
         expect(() => segwit.decode("bc1gmk9yu"),
-            throwsA(TypeMatcher<TooShortProgram>()));
+            throwsA(TypeMatcher<InvalidProgramLength>()));
       });
     });
   });

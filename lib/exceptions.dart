@@ -60,14 +60,12 @@ class InvalidHrp implements Exception {
   String toString() => "Human readable part should be 'bc' or 'tb'.";
 }
 
-class TooLongProgram implements Exception {
-  // TODO
-  String toString() => "";
-}
+class InvalidProgramLength implements Exception {
+  InvalidProgramLength(this.reason);
 
-class TooShortProgram implements Exception {
-  // TODO
-  String toString() => "";
+  final String reason;
+
+  String toString() => "Program length is invalid: $reason";
 }
 
 class InvalidWitnessVersion implements Exception {
@@ -76,6 +74,9 @@ class InvalidWitnessVersion implements Exception {
 }
 
 class InvalidPadding implements Exception {
-  // TODO
-  String toString() => "";
+  InvalidPadding(this.reason);
+
+  final String reason;
+
+  String toString() => "Invalid padding: $reason";
 }

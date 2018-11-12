@@ -29,7 +29,8 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
             separator.length +
             Bech32Validations.checksumLength >
         Bech32Validations.maxInputLength) {
-      throw TooLong(hrp.length + data.length + 1 + Bech32Validations.checksumLength);
+      throw TooLong(
+          hrp.length + data.length + 1 + Bech32Validations.checksumLength);
     }
 
     if (hrp.length < 1) {
