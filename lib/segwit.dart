@@ -30,8 +30,14 @@ class SegwitDecoder extends Converter<String, String> {
   String convert(String input) {
     Bech32 decoded = bech32.decode(input);
 
-    if(decoded.hrp != 'bc' || decoded.hrp != 'tb') {
+    if(decoded.hrp != 'bc' && decoded.hrp != 'tb') {
       throw InvalidHrp();
+    }
+
+    var version = decoded.data[0];
+
+    if (version > 16) {
+      throw InvalidWitnessVersion();
     }
 
     return "";
