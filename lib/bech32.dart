@@ -24,8 +24,12 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
     var hrp = input.hrp;
     var data = input.data;
 
-    if (hrp.length + data.length + 1 + Bech32Validations.checksumLength >
+    if (hrp.length +
+            data.length +
+            separator.length +
+            Bech32Validations.checksumLength >
         Bech32Validations.maxInputLength) {
+      // TODO clean up magic 7
       throw TooLong(hrp.length + data.length + 7);
     }
 
@@ -74,6 +78,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw InvalidSeparator(input.lastIndexOf(separator));
     }
 
+    var wasLower = input == input.toLowerCase();
     input = input.toLowerCase();
 
     var separatorPosition = input.lastIndexOf(separator);
@@ -83,6 +88,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
     }
 
     var hrp = input.substring(0, separatorPosition);
+
     var data = input.substring(
         separatorPosition + 1, input.length - Bech32Validations.checksumLength);
     var checksum =
@@ -108,7 +114,11 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw InvalidChecksum();
     }
 
-    return Bech32(hrp, dataBytes);
+    if (wasLower) {
+      return Bech32(hrp, dataBytes);
+    }
+
+    return Bech32(hrp.toUpperCase(), dataBytes);
   }
 }
 
@@ -224,7 +234,7 @@ List<int> _hrpExpand(String hrp) {
   var result = hrp.codeUnits.map((c) => c >> 5).toList();
   result = result + [0];
 
-  result = result + result.map((c) => c & 31).toList();
+  result = result + hrp.codeUnits.map((c) => c & 31).toList();
 
   return result;
 }
@@ -234,10 +244,15 @@ bool _verifyChecksum(String hrp, List<int> data) {
 }
 
 List<int> _createChecksum(String hrp, List<int> data) {
-  var values = _hrpExpand(hrp) + data;
-  var polymod = _polymod(values + [0, 0, 0, 0, 0]) ^ 1;
+  var values = _hrpExpand(hrp) + data + [0, 0, 0, 0, 0, 0];
+  var polymod = _polymod(values) ^ 1;
 
-  return [];
+  List<int> result = List<int>(6);
+
+  for (int i = 0; i < result.length; i++) {
+    result[i] = (polymod >> (5 * (5 - i))) & 31;
+  }
+  return result;
 }
 
 //String encode(String hrp, List<int> data) {
