@@ -55,3 +55,17 @@ class InvalidChecksum implements Exception {
 class TooShortChecksum implements Exception {
   String toString() => "Checksum is shorter than 6 characters";
 }
+
+class InvalidHrp implements Exception {
+  String toString() => "Human readable part should be 'bc' or 'tb'.";
+}
+
+class TooLongProgram implements Exception {
+  // TODO
+  String toString() => "";
+}
+
+class TooShortProgram implements Exception {
+  // TODO
+  String toString() => "";
+}

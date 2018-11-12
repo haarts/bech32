@@ -242,7 +242,3 @@ List<int> _createChecksum(String hrp, List<int> data) {
   }
   return result;
 }
-
-List<int> segwitDecode(String address) {}
-
-String segwitEncode(String hrp, int version, List<int> program) {}
