@@ -73,13 +73,9 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw MixedCase(input);
     }
 
-    // TODO lob off the checksum part already
     if (hasInvalidSeparator(input)) {
       throw InvalidSeparator(input.lastIndexOf(separator));
     }
-
-    var wasLower = input == input.toLowerCase();
-    input = input.toLowerCase();
 
     var separatorPosition = input.lastIndexOf(separator);
 
@@ -87,8 +83,10 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw InvalidChecksum();
     }
 
-    var hrp = input.substring(0, separatorPosition);
+    var wasLower = input == input.toLowerCase();
+    input = input.toLowerCase();
 
+    var hrp = input.substring(0, separatorPosition);
     var data = input.substring(
         separatorPosition + 1, input.length - Bech32Validations.checksumLength);
     var checksum =
@@ -156,14 +154,7 @@ class Bech32Validations {
   }
 
   bool hasInvalidSeparator(String bech32) {
-    var pos = bech32.lastIndexOf(separator);
-    // -1: not found
-    // pos + 7 only found in checksum part
-    if (pos == -1 || pos + 7 > bech32.length) {
-      return true;
-    }
-
-    return false;
+    return bech32.lastIndexOf(separator) == -1;
   }
 
   bool hasOutOfRangeHrpCharacters(String hrp) {
