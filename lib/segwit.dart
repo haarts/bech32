@@ -132,7 +132,6 @@ List<int> _convertBits(List<int> data, int from, int to, bool pad) {
   var bits = 0;
   List<int> result = [];
   var maxv = (1 << to) - 1;
-  var maxAcc = (1 << (from + to - 1)) - 1;
 
   data.forEach((v) {
     if (v < 0 || (v >> from) != 0) {
@@ -158,7 +157,3 @@ List<int> _convertBits(List<int> data, int from, int to, bool pad) {
 
   return result;
 }
-
-List<int> segwitDecode(String address) {}
-
-String segwitEncode(String hrp, int version, List<int> program) {}
