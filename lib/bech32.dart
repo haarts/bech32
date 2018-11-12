@@ -29,8 +29,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
             separator.length +
             Bech32Validations.checksumLength >
         Bech32Validations.maxInputLength) {
-      // TODO clean up magic 7
-      throw TooLong(hrp.length + data.length + 7);
+      throw TooLong(hrp.length + data.length + 1 + Bech32Validations.checksumLength);
     }
 
     if (hrp.length < 1) {
@@ -50,7 +49,8 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
     var checksummed = data + _createChecksum(hrp, data);
 
     if (hasOutOfBoundsChars(checksummed)) {
-      throw OutOfBoundChars('a');
+      // TODO this could be more informative
+      throw OutOfBoundChars('<unknown>');
     }
 
     return hrp + separator + checksummed.map((i) => charset[i]).join();
