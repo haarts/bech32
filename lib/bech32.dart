@@ -80,7 +80,11 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
     var separatorPosition = input.lastIndexOf(separator);
 
     if (isChecksumTooShort(separatorPosition, input)) {
-      throw InvalidChecksum();
+      throw TooShortChecksum();
+    }
+
+    if (isHrpTooShort(separatorPosition)) {
+      throw TooShortHrp();
     }
 
     var wasLower = input == input.toLowerCase();
@@ -91,10 +95,6 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
         separatorPosition + 1, input.length - Bech32Validations.checksumLength);
     var checksum =
         input.substring(input.length - Bech32Validations.checksumLength);
-
-    if (isHrpTooShort(hrp)) {
-      throw TooShortHrp();
-    }
 
     if (hasOutOfRangeHrpCharacters(hrp)) {
       throw OutOfRangeHrpCharacters(hrp);
@@ -141,8 +141,8 @@ class Bech32Validations {
     return data.any((c) => c == -1);
   }
 
-  bool isHrpTooShort(String hrp) {
-    return hrp.length < 1;
+  bool isHrpTooShort(int separatorPosition) {
+    return separatorPosition == 0;
   }
 
   bool isInvalidChecksum(String hrp, List<int> data, List<int> checksum) {

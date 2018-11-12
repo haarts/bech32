@@ -51,3 +51,7 @@ class InvalidAddress implements Exception {
 class InvalidChecksum implements Exception {
   String toString() => "Checksum verification failed";
 }
+
+class TooShortChecksum implements Exception {
+  String toString() => "Checksum is shorter than 6 characters";
+}

@@ -69,7 +69,7 @@ void main() {
 
       test("too short checksum", () {
         expect(() => bech32.decode("li1dgmt3"),
-            throwsA(TypeMatcher<InvalidChecksum>()));
+            throwsA(TypeMatcher<TooShortChecksum>()));
       });
 
       test("invalid checksum character", () {
