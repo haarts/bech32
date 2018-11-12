@@ -45,7 +45,6 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
       throw MixedCase(hrp);
     }
 
-    var wasLower = hrp == hrp.toLowerCase();
     hrp = hrp.toLowerCase();
 
     var checksummed = data + _createChecksum(hrp, data);
@@ -54,12 +53,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
       throw OutOfBoundChars('a');
     }
 
-    var result = hrp + separator + checksummed.map((i) => charset[i]).join();
-    if (wasLower) {
-      return result;
-    }
-
-    return result.toUpperCase();
+    return hrp + separator + checksummed.map((i) => charset[i]).join();
   }
 }
 
@@ -87,7 +81,6 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw TooShortHrp();
     }
 
-    var wasLower = input == input.toLowerCase();
     input = input.toLowerCase();
 
     var hrp = input.substring(0, separatorPosition);
@@ -120,11 +113,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw InvalidChecksum();
     }
 
-    if (wasLower) {
-      return Bech32(hrp, dataBytes);
-    }
-
-    return Bech32(hrp.toUpperCase(), dataBytes);
+    return Bech32(hrp, dataBytes);
   }
 }
 

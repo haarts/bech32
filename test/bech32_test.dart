@@ -24,7 +24,7 @@ void main() {
 
       valid.forEach((vec) {
         test("decode then encode static vector: $vec", () {
-          expect(bech32.encode(bech32.decode(vec)), vec);
+          expect(bech32.encode(bech32.decode(vec)), vec.toLowerCase());
         });
       });
     });
@@ -91,11 +91,6 @@ void main() {
         expect(() => bech32.decode("1qzzfhee"),
             throwsA(TypeMatcher<TooShortHrp>()));
       });
-    });
-
-    group("lower/upper case handling", () {
-      test("throw exception on mixed case", () {});
-      test("output lower case only", () {});
     });
   });
 
