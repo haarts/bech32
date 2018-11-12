@@ -148,7 +148,7 @@ class Bech32Validations {
   }
 
   bool isInvalidChecksum(String hrp, List<int> data, List<int> checksum) {
-    return _verifyChecksum(hrp, data + checksum);
+    return !_verifyChecksum(hrp, data + checksum);
   }
 
   bool isMixedCase(String input) {
@@ -247,8 +247,8 @@ List<int> _hrpExpand(String hrp) {
   return result;
 }
 
-bool _verifyChecksum(String hrp, List<int> data) {
-  return _polymod(_hrpExpand(hrp) + data) == 1;
+bool _verifyChecksum(String hrp, List<int> dataIncludingChecksum) {
+  return _polymod(_hrpExpand(hrp) + dataIncludingChecksum) == 1;
 }
 
 List<int> _createChecksum(String hrp, List<int> data) {
