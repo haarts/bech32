@@ -31,7 +31,7 @@ void main() {
       ];
 
       valid.forEach((tuple) {
-        test("convert to correct scriptPubky: ${tuple[0]}", () {
+        test("convert to correct scriptPubkey: ${tuple[0]}", () {
           expect(segwit.decode(tuple[0]).scriptPubKey, tuple[1]);
         });
       });
