@@ -26,7 +26,7 @@ class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
     var program = input.program;
 
     if (isInvalidVersion(version)) {
-      throw InvalidWitnessVersion();
+      throw InvalidWitnessVersion(version);
     }
 
     if (isTooShortProgram(program)) {
@@ -63,7 +63,7 @@ class SegwitDecoder extends Converter<String, Segwit> with SegwitValidations {
     var version = decoded.data[0];
 
     if (isInvalidVersion(version)) {
-      throw InvalidWitnessVersion();
+      throw InvalidWitnessVersion(version);
     }
 
     List<int> program = _convertBits(decoded.data.sublist(1), 5, 8, false);

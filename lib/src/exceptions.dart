@@ -69,8 +69,11 @@ class InvalidProgramLength implements Exception {
 }
 
 class InvalidWitnessVersion implements Exception {
-  // TODO
-  String toString() => "";
+	InvalidWitnessVersion(this.version);
+
+	final int version;
+
+  String toString() => "Witness version $version > 16";
 }
 
 class InvalidPadding implements Exception {
