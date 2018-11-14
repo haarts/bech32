@@ -69,9 +69,9 @@ class InvalidProgramLength implements Exception {
 }
 
 class InvalidWitnessVersion implements Exception {
-	InvalidWitnessVersion(this.version);
+  InvalidWitnessVersion(this.version);
 
-	final int version;
+  final int version;
 
   String toString() => "Witness version $version > 16";
 }
