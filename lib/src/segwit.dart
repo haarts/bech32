@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:bech32/bech32.dart';
-import 'package:bech32/exceptions.dart';
+import 'bech32.dart';
+import 'exceptions.dart';
 
 const SegwitCodec segwit = SegwitCodec();
 

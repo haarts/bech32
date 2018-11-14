@@ -1,7 +1,6 @@
 import "package:test/test.dart";
 
-import "package:bech32/segwit.dart";
-import "package:bech32/exceptions.dart";
+import "package:bech32/bech32.dart";
 
 void main() {
   group("segwit with", () {

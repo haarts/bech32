@@ -1,7 +1,6 @@
 import "package:test/test.dart";
 
 import "package:bech32/bech32.dart";
-import "package:bech32/exceptions.dart";
 
 void main() {
   group("bech32 with", () {
