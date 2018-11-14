@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'bech32.dart';
 import 'exceptions.dart';
 
+/// An instance of the default implementation of the SegwitCodec
 const SegwitCodec segwit = SegwitCodec();
 
+/// A codec which converts a Segwit class to its String representation and vice versa.
 class SegwitCodec extends Codec<Segwit, String> {
   const SegwitCodec();
 
@@ -20,6 +22,7 @@ class SegwitCodec extends Codec<Segwit, String> {
   }
 }
 
+/// This class converts a Segwit class instance to a String.
 class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
   String convert(Segwit input) {
     var version = input.version;
@@ -48,6 +51,7 @@ class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
   }
 }
 
+/// This class converts a String to a Segwit class instance.
 class SegwitDecoder extends Converter<String, Segwit> with SegwitValidations {
   Segwit convert(String input) {
     Bech32 decoded = bech32.decode(input);
@@ -85,6 +89,7 @@ class SegwitDecoder extends Converter<String, Segwit> with SegwitValidations {
   }
 }
 
+/// Generic validations for a Segwit class.
 class SegwitValidations {
   bool isInvalidHrp(String hrp) {
     return hrp != 'bc' && hrp != 'tb';
@@ -111,6 +116,7 @@ class SegwitValidations {
   }
 }
 
+/// A representation of a Segwit Bech32 address. This class can be used to obtain the `scriptPubKey`.
 class Segwit {
   Segwit(this.hrp, this.version, this.program);
 

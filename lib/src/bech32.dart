@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'exceptions.dart';
 
+/// An instance of the default implementation of the Bech32Codec.
 const Bech32Codec bech32 = Bech32Codec();
 
 class Bech32Codec extends Codec<Bech32, String> {
@@ -19,6 +20,7 @@ class Bech32Codec extends Codec<Bech32, String> {
   }
 }
 
+// This class converts a Bech32 class instance to a String.
 class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
   String convert(Bech32 input) {
     var hrp = input.hrp;
@@ -58,6 +60,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
   }
 }
 
+// This class converts a String to a Bech32 class instance.
 class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
   Bech32 convert(String input) {
     if (input.length > Bech32Validations.maxInputLength) {
@@ -118,6 +121,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
   }
 }
 
+/// Generic validations for Bech32 standard.
 class Bech32Validations {
   static const int maxInputLength = 90;
   static const checksumLength = 6;
@@ -152,6 +156,8 @@ class Bech32Validations {
   }
 }
 
+/// Bech32 is a dead simple wrapper around a Human Readable Part (HRP) and a
+/// bunch of bytes.
 class Bech32 {
   Bech32(this.hrp, this.data);
 
