@@ -1,3 +1,4 @@
+import "package:hex/hex.dart";
 import "package:test/test.dart";
 
 import "package:bech32/bech32.dart";
@@ -40,6 +41,33 @@ void main() {
           expect(
               segwit.encode(segwit.decode(tuple[0])), tuple[0].toLowerCase());
         });
+      });
+
+      test(
+          "P2WPKH public key '0279BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798' from spec",
+          () {
+        // generated with:
+        // $ echo 0279BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798 | xxd -r -p | openssl sha256
+        // (stdin)= 0f715baf5d4c2ed329785cef29e562f73488c8a2bb9dbc5700b361d54b9b0554
+        // $ echo 0f715baf5d4c2ed329785cef29e562f73488c8a2bb9dbc5700b361d54b9b0554 | xxd -r -p | openssl ripemd160
+        // (stdin)= 751e76e8199196d454941c45d1b3a323f1433bd
+        var hash160 = "751e76e8199196d454941c45d1b3a323f1433bd6";
+        expect(segwit.encode(Segwit('bc', 0, HEX.decode(hash160))),
+            "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4");
+        expect(segwit.encode(Segwit('tb', 0, HEX.decode(hash160))),
+            "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx");
+      });
+
+      test(
+          "P2WSH public key '0279BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798' from spec",
+          () {
+        // generated with (data length + pub key + OP_CHECKSIG = 21 + key + ac):
+        // $ echo 215c29633ecf0ca73ed7812e511d580611b9c9e5219ad07a6dcc2dd092ea7f70cfac | xxd -r -p | openssl sha256
+        // (stdin)= 1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262
+        var hash =
+            "1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262";
+        expect(segwit.encode(Segwit('bc', 0, HEX.decode(hash))),
+            "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3");
       });
     });
 

@@ -9,6 +9,7 @@ dependencies:
 
 dev_dependencies:
     test: ^1.3.4
+    hex: any
 
 environment:
     sdk: ">=2.0.0 <3.0.0"
