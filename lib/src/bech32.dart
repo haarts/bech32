@@ -11,18 +11,19 @@ class Bech32Codec extends Codec<Bech32, String> {
   Bech32Decoder get decoder => Bech32Decoder();
   Bech32Encoder get encoder => Bech32Encoder();
 
-  String encode(Bech32 data) {
-    return Bech32Encoder().convert(data);
+  String encode(Bech32 data, [maxLength = Bech32Validations.maxInputLength]) {
+    return Bech32Encoder().convert(data, maxLength);
   }
 
-  Bech32 decode(String data) {
-    return Bech32Decoder().convert(data);
+  Bech32 decode(String data, [maxLength = Bech32Validations.maxInputLength]) {
+    return Bech32Decoder().convert(data, maxLength);
   }
 }
 
 // This class converts a Bech32 class instance to a String.
 class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
-  String convert(Bech32 input) {
+  String convert(Bech32 input,
+      [int maxLength = Bech32Validations.maxInputLength]) {
     var hrp = input.hrp;
     var data = input.data;
 
@@ -30,7 +31,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
             data.length +
             separator.length +
             Bech32Validations.checksumLength >
-        Bech32Validations.maxInputLength) {
+        maxLength) {
       throw TooLong(
           hrp.length + data.length + 1 + Bech32Validations.checksumLength);
     }
@@ -62,8 +63,9 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
 
 // This class converts a String to a Bech32 class instance.
 class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
-  Bech32 convert(String input) {
-    if (input.length > Bech32Validations.maxInputLength) {
+  Bech32 convert(String input,
+      [int maxLength = Bech32Validations.maxInputLength]) {
+    if (input.length > maxLength) {
       throw TooLong(input.length);
     }
 
