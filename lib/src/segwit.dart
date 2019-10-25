@@ -96,7 +96,7 @@ class SegwitValidations {
   }
 
   bool isEmptyProgram(List<int> data) {
-    return data.length == 0;
+    return data.isEmpty;
   }
 
   bool isInvalidVersion(int version) {

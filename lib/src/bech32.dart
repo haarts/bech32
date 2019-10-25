@@ -36,7 +36,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
           hrp.length + data.length + 1 + Bech32Validations.checksumLength);
     }
 
-    if (hrp.length < 1) {
+    if (hrp.isEmpty) {
       throw TooShortHrp();
     }
 
