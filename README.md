@@ -1,6 +1,7 @@
 # Bech32
 
 [![pub package](https://img.shields.io/pub/v/bech32.svg)](https://pub.dartlang.org/packages/bech32)
+[![CircleCI](https://circleci.com/gh/inapay/bech32.svg?style=svg)](https://circleci.com/gh/inapay/bech32)
 
 An implementation of the [BIP173 spec] for Segwit Bech32 address format.
 
