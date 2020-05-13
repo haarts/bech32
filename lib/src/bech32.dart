@@ -8,13 +8,17 @@ const Bech32Codec bech32 = Bech32Codec();
 class Bech32Codec extends Codec<Bech32, String> {
   const Bech32Codec();
 
+  @override
   Bech32Decoder get decoder => Bech32Decoder();
+  @override
   Bech32Encoder get encoder => Bech32Encoder();
 
+  @override
   String encode(Bech32 data, [maxLength = Bech32Validations.maxInputLength]) {
     return Bech32Encoder().convert(data, maxLength);
   }
 
+  @override
   Bech32 decode(String data, [maxLength = Bech32Validations.maxInputLength]) {
     return Bech32Decoder().convert(data, maxLength);
   }
@@ -22,6 +26,7 @@ class Bech32Codec extends Codec<Bech32, String> {
 
 // This class converts a Bech32 class instance to a String.
 class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
+  @override
   String convert(Bech32 input,
       [int maxLength = Bech32Validations.maxInputLength]) {
     var hrp = input.hrp;
@@ -63,6 +68,7 @@ class Bech32Encoder extends Converter<Bech32, String> with Bech32Validations {
 
 // This class converts a String to a Bech32 class instance.
 class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
+  @override
   Bech32 convert(String input,
       [int maxLength = Bech32Validations.maxInputLength]) {
     if (input.length > maxLength) {
@@ -99,7 +105,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw OutOfRangeHrpCharacters(hrp);
     }
 
-    List<int> dataBytes = data.split('').map((c) {
+    var dataBytes = data.split('').map((c) {
       return charset.indexOf(c);
     }).toList();
 
@@ -107,7 +113,7 @@ class Bech32Decoder extends Converter<String, Bech32> with Bech32Validations {
       throw OutOfBoundChars(data[dataBytes.indexOf(-1)]);
     }
 
-    List<int> checksumBytes = checksum.split('').map((c) {
+    var checksumBytes = checksum.split('').map((c) {
       return charset.indexOf(c);
     }).toList();
 
@@ -167,41 +173,41 @@ class Bech32 {
   final List<int> data;
 }
 
-const String separator = "1";
+const String separator = '1';
 
 const List<String> charset = [
-  "q",
-  "p",
-  "z",
-  "r",
-  "y",
-  "9",
-  "x",
-  "8",
-  "g",
-  "f",
-  "2",
-  "t",
-  "v",
-  "d",
-  "w",
-  "0",
-  "s",
-  "3",
-  "j",
-  "n",
-  "5",
-  "4",
-  "k",
-  "h",
-  "c",
-  "e",
-  "6",
-  "m",
-  "u",
-  "a",
-  "7",
-  "l",
+  'q',
+  'p',
+  'z',
+  'r',
+  'y',
+  '9',
+  'x',
+  '8',
+  'g',
+  'f',
+  '2',
+  't',
+  'v',
+  'd',
+  'w',
+  '0',
+  's',
+  '3',
+  'j',
+  'n',
+  '5',
+  '4',
+  'k',
+  'h',
+  'c',
+  'e',
+  '6',
+  'm',
+  'u',
+  'a',
+  '7',
+  'l',
 ];
 
 const List<int> generator = [
@@ -214,10 +220,10 @@ const List<int> generator = [
 
 int _polymod(List<int> values) {
   var chk = 1;
-  values.forEach((int v) {
+  values.forEach((v) {
     var top = chk >> 25;
     chk = (chk & 0x1ffffff) << 5 ^ v;
-    for (int i = 0; i < generator.length; i++) {
+    for (var i = 0; i < generator.length; i++) {
       if ((top >> i) & 1 == 1) {
         chk ^= generator[i];
       }
@@ -244,9 +250,9 @@ List<int> _createChecksum(String hrp, List<int> data) {
   var values = _hrpExpand(hrp) + data + [0, 0, 0, 0, 0, 0];
   var polymod = _polymod(values) ^ 1;
 
-  List<int> result = List<int>(6);
+  var result = List<int>(6);
 
-  for (int i = 0; i < result.length; i++) {
+  for (var i = 0; i < result.length; i++) {
     result[i] = (polymod >> (5 * (5 - i))) & 31;
   }
   return result;

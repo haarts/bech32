@@ -10,13 +10,17 @@ const SegwitCodec segwit = SegwitCodec();
 class SegwitCodec extends Codec<Segwit, String> {
   const SegwitCodec();
 
+  @override
   SegwitDecoder get decoder => SegwitDecoder();
+  @override
   SegwitEncoder get encoder => SegwitEncoder();
 
+  @override
   String encode(Segwit data) {
     return SegwitEncoder().convert(data);
   }
 
+  @override
   Segwit decode(String data) {
     return SegwitDecoder().convert(data);
   }
@@ -24,6 +28,7 @@ class SegwitCodec extends Codec<Segwit, String> {
 
 /// This class converts a Segwit class instance to a String.
 class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
+  @override
   String convert(Segwit input) {
     var version = input.version;
     var program = input.program;
@@ -33,16 +38,16 @@ class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
     }
 
     if (isTooShortProgram(program)) {
-      throw InvalidProgramLength("too short");
+      throw InvalidProgramLength('too short');
     }
 
     if (isTooLongProgram(program)) {
-      throw InvalidProgramLength("too long");
+      throw InvalidProgramLength('too long');
     }
 
     if (isWrongVersion0Program(version, program)) {
       throw InvalidProgramLength(
-          "version $version invalid with length ${program.length}");
+          'version $version invalid with length ${program.length}');
     }
 
     var data = _convertBits(program, 8, 5, true);
@@ -53,15 +58,16 @@ class SegwitEncoder extends Converter<Segwit, String> with SegwitValidations {
 
 /// This class converts a String to a Segwit class instance.
 class SegwitDecoder extends Converter<String, Segwit> with SegwitValidations {
+  @override
   Segwit convert(String input) {
-    Bech32 decoded = bech32.decode(input);
+    var decoded = bech32.decode(input);
 
     if (isInvalidHrp(decoded.hrp)) {
       throw InvalidHrp();
     }
 
     if (isEmptyProgram(decoded.data)) {
-      throw InvalidProgramLength("empty");
+      throw InvalidProgramLength('empty');
     }
 
     var version = decoded.data[0];
@@ -70,19 +76,19 @@ class SegwitDecoder extends Converter<String, Segwit> with SegwitValidations {
       throw InvalidWitnessVersion(version);
     }
 
-    List<int> program = _convertBits(decoded.data.sublist(1), 5, 8, false);
+    var program = _convertBits(decoded.data.sublist(1), 5, 8, false);
 
     if (isTooShortProgram(program)) {
-      throw InvalidProgramLength("too short");
+      throw InvalidProgramLength('too short');
     }
 
     if (isTooLongProgram(program)) {
-      throw InvalidProgramLength("too long");
+      throw InvalidProgramLength('too long');
     }
 
     if (isWrongVersion0Program(version, program)) {
       throw InvalidProgramLength(
-          "version $version invalid with length ${program.length}");
+          'version $version invalid with length ${program.length}');
     }
 
     return Segwit(decoded.hrp, version, program);
@@ -136,7 +142,7 @@ class Segwit {
 List<int> _convertBits(List<int> data, int from, int to, bool pad) {
   var acc = 0;
   var bits = 0;
-  List<int> result = [];
+  var result = <int>[];
   var maxv = (1 << to) - 1;
 
   data.forEach((v) {
@@ -156,9 +162,9 @@ List<int> _convertBits(List<int> data, int from, int to, bool pad) {
       result.add((acc << (to - bits)) & maxv);
     }
   } else if (bits >= from) {
-    throw InvalidPadding("illegal zero padding");
+    throw InvalidPadding('illegal zero padding');
   } else if (((acc << (to - bits)) & maxv) != 0) {
-    throw InvalidPadding("non zero");
+    throw InvalidPadding('non zero');
   }
 
   return result;

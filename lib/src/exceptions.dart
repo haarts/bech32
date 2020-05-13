@@ -1,5 +1,6 @@
 class TooShortHrp implements Exception {
-  String toString() => "The human readable part should have non zero length.";
+  @override
+  String toString() => 'The human readable part should have non zero length.';
 }
 
 class TooLong implements Exception {
@@ -7,7 +8,8 @@ class TooLong implements Exception {
 
   final int length;
 
-  String toString() => "The bech32 string is too long: $length (>90)";
+  @override
+  String toString() => 'The bech32 string is too long: $length (>90)';
 }
 
 class OutOfRangeHrpCharacters implements Exception {
@@ -15,8 +17,9 @@ class OutOfRangeHrpCharacters implements Exception {
 
   final String hpr;
 
+  @override
   String toString() =>
-      "The human readable part contains invalid characters: $hpr";
+      'The human readable part contains invalid characters: $hpr';
 }
 
 class MixedCase implements Exception {
@@ -24,8 +27,9 @@ class MixedCase implements Exception {
 
   final String hpr;
 
+  @override
   String toString() =>
-      "The human readable part is mixed case, should either be all lower or all upper case: $hpr";
+      'The human readable part is mixed case, should either be all lower or all upper case: $hpr';
 }
 
 class OutOfBoundChars implements Exception {
@@ -33,7 +37,8 @@ class OutOfBoundChars implements Exception {
 
   final String char;
 
-  String toString() => "A character is undefined in bech32: $char";
+  @override
+  String toString() => 'A character is undefined in bech32: $char';
 }
 
 class InvalidSeparator implements Exception {
@@ -41,22 +46,27 @@ class InvalidSeparator implements Exception {
 
   final int pos;
 
+  @override
   String toString() => "separator '1' at invalid position: $pos";
 }
 
 class InvalidAddress implements Exception {
-  String toString() => "";
+  @override
+  String toString() => '';
 }
 
 class InvalidChecksum implements Exception {
-  String toString() => "Checksum verification failed";
+  @override
+  String toString() => 'Checksum verification failed';
 }
 
 class TooShortChecksum implements Exception {
-  String toString() => "Checksum is shorter than 6 characters";
+  @override
+  String toString() => 'Checksum is shorter than 6 characters';
 }
 
 class InvalidHrp implements Exception {
+  @override
   String toString() => "Human readable part should be 'bc' or 'tb'.";
 }
 
@@ -65,7 +75,8 @@ class InvalidProgramLength implements Exception {
 
   final String reason;
 
-  String toString() => "Program length is invalid: $reason";
+  @override
+  String toString() => 'Program length is invalid: $reason';
 }
 
 class InvalidWitnessVersion implements Exception {
@@ -73,7 +84,8 @@ class InvalidWitnessVersion implements Exception {
 
   final int version;
 
-  String toString() => "Witness version $version > 16";
+  @override
+  String toString() => 'Witness version $version > 16';
 }
 
 class InvalidPadding implements Exception {
@@ -81,5 +93,6 @@ class InvalidPadding implements Exception {
 
   final String reason;
 
-  String toString() => "Invalid padding: $reason";
+  @override
+  String toString() => 'Invalid padding: $reason';
 }
