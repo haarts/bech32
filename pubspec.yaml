@@ -1,8 +1,8 @@
 name: bech32
 version: 0.1.2
 description: Library implementing Bitcoins BIP173 (Bech32 encoding) specification in a Flutter friendly fashion.
-author: Kolibri POS authors <info@kolibripos.com>
-homepage: https://github.com/Kolibri-POS/bech32
+author: Harm Aarts <harm@aarts.email>
+homepage: https://github.com/haarts/bech32
 
 dependencies:
     convert: ^2.0.2
