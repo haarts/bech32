@@ -1,3 +1,6 @@
+v0.2.0-nullsafety.0
+* Pre-release for the null safety migration of this package.
+
 v0.1.2
 * Add optional maxLength parameter for decoding Lightning addresses
 
