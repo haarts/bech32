@@ -250,7 +250,7 @@ List<int> _createChecksum(String hrp, List<int> data) {
   var values = _hrpExpand(hrp) + data + [0, 0, 0, 0, 0, 0];
   var polymod = _polymod(values) ^ 1;
 
-  var result = List<int>(6);
+  var result = <int>[0, 0, 0, 0, 0, 0];
 
   for (var i = 0; i < result.length; i++) {
     result[i] = (polymod >> (5 * (5 - i))) & 31;
