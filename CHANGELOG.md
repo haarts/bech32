@@ -1,3 +1,6 @@
+v0.2.1
+* Update the convert package (thanks Juneezee)
+
 v0.2.0
 * Release for the null safety migration of this package.
 
