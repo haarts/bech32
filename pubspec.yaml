@@ -4,7 +4,7 @@ description: Library implementing Bitcoins BIP173 (Bech32 encoding) specificatio
 homepage: https://github.com/haarts/bech32
 
 dependencies:
-    convert: '>=1.0.0 <=3.0.0'
+    convert: '>=1.0.0 <3.1.0'
 
 dev_dependencies:
     hex: ^0.2.0
