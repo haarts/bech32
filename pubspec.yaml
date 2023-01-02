@@ -1,10 +1,10 @@
 name: bech32
-version: 0.2.1
+version: 0.2.2
 description: Library implementing Bitcoins BIP173 (Bech32 encoding) specification in a Flutter friendly fashion.
 homepage: https://github.com/haarts/bech32
 
 dependencies:
-    convert: '>=1.0.0 <3.1.0'
+    convert: ^3.1.1
 
 dev_dependencies:
     hex: ^0.2.0
